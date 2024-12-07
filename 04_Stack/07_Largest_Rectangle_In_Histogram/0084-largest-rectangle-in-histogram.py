@@ -13,12 +13,37 @@ The space complexity is O(n), where n is the number of elements in the input lis
 
 
 class Solution:
+
     def largestRectangleArea(self, heights: List[int]) -> int:
+        stk = [] # monotonic increasing stack
+        # stack contains pair of (index, height)
+        # the index is such that, it tells how much backwards it can extend to
+        # usually updated when higher height is popped
+        area = 0
+
+        for idx, curr_height in enumerate(heights):
+            start_current = idx
+            while stk and stk[-1][1] > curr_height:
+                (prev_idx, prev_height) = stk.pop()
+                # prev_idx being valid so far means that it could extend upto curr
+                area = max(area, prev_height * (idx-prev_idx))
+                # since our curr_height < prev_height
+                # we can extend it's width backwards upto atleast prev_idx
+                start_current = prev_idx
+            stk.append((start_current, curr_height))
+
+        # what about the items left in the stack, they could extend till end!
+        for (idx, height) in stk:
+            area = max(area, height * (len(heights) - idx))
+        return area
+
+    # More complex solution
+    def largestRectangleArea2(self, heights: List[int]) -> int:
         stack = []
         max_area = 0
 
         for i in range(len(heights)):
-            while stack and heights[i] < heights[stack[-1]]:
+            while stack and heights[stack[-1]] > heights[i]:
                 height = heights[stack.pop()]
                 width = i if not stack else i - stack[-1] - 1
                 max_area = max(max_area, height * width)

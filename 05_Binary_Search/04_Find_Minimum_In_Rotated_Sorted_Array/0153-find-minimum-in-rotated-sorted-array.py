@@ -20,8 +20,11 @@ class Solution:
             mid = left + (right - left) // 2
 
             if nums[mid] > nums[right]:
+                # its smth like: 5 1 2 3 with mid = 5
+                # so the minimum elem must be on rhs
                 left = mid + 1
             else:
+                # mid is also valid potential answer
                 right = mid
 
         return nums[left]

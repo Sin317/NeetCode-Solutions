@@ -27,3 +27,49 @@ class Solution:
                 heapq.heappop(min_heap)
 
         return [num for frequency, num in min_heap]
+
+
+"""
+can be done with quickselect as well
+avg case of O(N)
+"""
+
+def topKFrequent(self, nums: List[int], k: int) -> List[int]:
+        counts = {}
+        for x in nums:
+            counts[x] = counts.setdefault(x, 0) + 1
+        
+        counter = list(counts.items())
+        
+        # counter is a list of tuples as: [(1,1), (2,1), (3,2)] if arr was [1,3,2,3]
+
+        def quickSelect(l, r):
+            if l == r:
+                return counter[:k]
+            pivot = r
+            start = l
+
+            for idx in range(l, r+1):
+                if counter[idx][1] > counter[pivot][1]:
+                    counter[start], counter[idx] = counter[idx], counter[start] 
+
+                    start += 1
+            counter[start], counter[r] = counter[r], counter[start]
+            
+            if start < k:
+                # need more elements so include from right
+                return quickSelect(start+1, r)
+
+            elif start == k:
+                return counter[:k]
+
+            else:
+                return quickSelect(l, start - 1)
+
+        
+        ans = quickSelect(0, len(counter)-1)
+        res = []
+        for value in ans:
+            res.append(value[0])
+
+        return res
