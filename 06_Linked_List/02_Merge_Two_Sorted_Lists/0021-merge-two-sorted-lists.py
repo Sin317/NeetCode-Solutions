@@ -19,7 +19,7 @@ The space complexity is O(1), as no extra space is used other than a few variabl
 
 
 class Solution:
-    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+    def mergeTwoListsIterative(self, l1: ListNode, l2: ListNode) -> ListNode:
         dummy = ListNode()
         current = dummy
 
@@ -38,3 +38,19 @@ class Solution:
             current.next = l2
 
         return dummy.next
+
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        if not list1 and not list2:
+            return None
+
+        elif not list1:
+            return list2
+        elif not list2:
+            return list1
+
+        if list1.val < list2.val:
+            list1.next = self.mergeTwoLists(list1.next, list2)
+            return list1
+        else:
+            list2.next = self.mergeTwoLists(list1, list2.next)
+            return list2
