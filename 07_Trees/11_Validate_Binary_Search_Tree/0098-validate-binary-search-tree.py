@@ -36,3 +36,42 @@ class Solution:
 
         prev = [None]
         return inorder_traversal(root, prev)
+
+    # min and max approach at every point
+    def isValidBST(self, root: Optional[TreeNode]) -> bool:
+        def helper(node, minv, maxv):
+            if node is None:
+                return True
+            if minv < node.val < maxv:
+                return helper(node.left, minv, node.val) and helper(node.right, node.val, maxv)
+            else:
+                return False
+
+        if root:
+            return helper(root.left, -float('inf'), root.val) and helper(root.right, root.val, float('inf'))
+        else:
+            return True
+
+    
+    # iterative in order
+    # go all left. check node. go all way right
+
+    class Solution:
+    def isValidBST(self, root: TreeNode) -> bool:
+        stack, prev = [], -math.inf
+
+        while stack or root:
+            while root:
+                stack.append(root)
+                root = root.left
+            root = stack.pop()
+
+            # If next element in inorder traversal
+            # is smaller than the previous one
+            # that's not BST.
+            if root.val <= prev:
+                return False
+            prev = root.val
+            root = root.right
+
+        return True

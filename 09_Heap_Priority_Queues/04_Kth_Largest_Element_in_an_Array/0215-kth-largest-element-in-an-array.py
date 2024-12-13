@@ -25,3 +25,41 @@ class Solution:
                 heapq.heappop(min_heap)
 
         return min_heap[0]
+
+    # quickselect
+    def quickselect(arr, k):
+            pivot = arr[0]
+            l = []
+            r = []
+            e = []
+            for i in arr:
+                if i < pivot:
+                    r.append(i)
+                elif i > pivot:
+                    l.append(i)
+                else:
+                    e.append(i)
+            if k <= len(l):
+                return quickselect(l,k)
+            elif k > (len(l)+ len(e)):
+                return quickselect(r, k - len(l) - len(e))
+            else:
+                return pivot
+
+    # bucket sort
+    def bucketSort()
+        min_value = min(nums)
+        max_value = max(nums)
+        count = [0] * (max_value - min_value + 1)
+
+        for num in nums:
+            count[num - min_value] += 1
+        
+        remain = k
+        
+        for num in range(len(count) -1, -1, -1):
+            remain -= count[num]
+            if remain <= 0:
+                return num + min_value
+
+        return -1

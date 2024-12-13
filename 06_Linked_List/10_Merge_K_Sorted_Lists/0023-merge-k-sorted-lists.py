@@ -21,7 +21,41 @@ import heapq
 
 
 class Solution:
-    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+    def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        """
+        use merge sort, but since lists wont change, we need to use proper indexing to merge 
+        correct lists
+        """
+        def merge(l1, l2):
+            if l1 is None:
+                return l2
+            elif l2 is None:
+                return l1
+            # now check which is greater
+            if l1.val <= l2.val:
+                # we keep l1's current val
+                l1.next = merge(l1.next, l2)
+                return l1
+            else:
+                l2.next = merge(l1, l2.next)
+                return l2
+            
+        if len(lists) == 0:
+            return None 
+        interval = 1
+        while interval < len(lists):
+            for idx in range(0, len(lists)-interval, interval * 2):
+                # eg: merge 0 & 1, 2 & 3 => idx goes from 0, 2, ...
+                lists[idx] = merge(lists[idx], lists[idx+interval])
+                
+            interval *= 2 # width between is power of 2 increments
+            # eg: 0,1 .. 2,3 .. 4,5  interval = 1
+            # 0,2 .. 4 interval = 2
+            # 0,4 interval = 4
+
+        return lists[0]
+
+    def mergeKListsHeap(self, lists: List[ListNode]) -> ListNode:
         min_heap = []
         for i, l in enumerate(lists):
             if l:

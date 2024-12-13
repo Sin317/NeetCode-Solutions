@@ -41,3 +41,30 @@ class Solution:
             return new_node
 
         return dfs(node)
+    
+    
+    def bfsCloneGraph(self, node):
+        if not node:
+            return None
+        original = node
+        cloned = Node(original.val)
+
+        queue = deque()
+        queue.append((original, cloned))
+        visited = dict()
+        visited[original] = cloned
+        while queue:
+            origCurrent, clonedCurrent = queue.popleft()
+            
+            for neighNode in origCurrent.neighbors:
+                
+                # add this to parent as its neighbor
+                if neighNode not in visited:
+                    clonedNeigh = Node(neighNode.val)
+                    queue.append((neighNode, clonedNeigh))
+                    visited[neighNode] = clonedNeigh
+                # to avoid duplications of copying neighbors
+                # rule is to, whenever we encounter neighbors of a parent
+                # add it to the neighbors of cloned parent
+                clonedCurrent.neighbors.append(visited[neighNode])
+        return cloned

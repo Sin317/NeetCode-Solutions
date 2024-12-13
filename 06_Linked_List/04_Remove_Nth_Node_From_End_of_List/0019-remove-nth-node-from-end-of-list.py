@@ -25,14 +25,15 @@ class Solution:
         fast = slow = dummy
 
         # Move 'fast' n nodes ahead
-        for _ in range(n):
+        for _ in range(n+1):
             fast = fast.next
 
         # Move both pointers until 'fast' reaches the end
-        while fast.next:
+        while fast:
             fast = fast.next
             slow = slow.next
 
+        # slow will be the node behind the node to be deleted
         # Remove the nth node from the end
         slow.next = slow.next.next
 

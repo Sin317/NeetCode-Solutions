@@ -13,6 +13,23 @@ Space Complexity:
 
 
 class Solution:
+    # brute force way
+    def countBits(self, n: int) -> List[int]:
+        def countBit(n):
+            count = 0
+            while n:
+                count += n & 1
+                n = n >> 1
+
+            return count
+
+        bitcounts = []
+        for num in range(n+1):
+            bitcounts.append(countBit(num))
+
+        return bitcounts
+
+    # Optimized DP
     def countBits(self, num: int) -> List[int]:
         bits_count = [0] * (num + 1)
 

@@ -41,3 +41,37 @@ class Solution:
             return False
 
         return len(visited) == n
+
+    # Mine
+    def validTree(self, n: int, edges: List[List[int]]) -> bool:
+        # trees are DAGs so need to make sure
+        # 1. no cycle
+        # 2. every node must be connected
+
+        graph = collections.defaultdict(list)
+
+        for v,u in edges:
+            graph[v].append(u)
+            graph[u].append(v)
+
+        visited = dict()
+
+        def dfs(node, parent):
+            if node in visited:
+                return visited[node] == 0
+
+            visited[node] = -1
+            for neigh in graph[node]:
+                if neigh == parent: # since its undirected!
+                    continue
+
+                if not dfs(neigh, node):
+                    return False
+            visited[node] = 0
+            return True
+
+        
+        if not dfs(0, -1):
+            return False
+
+        return len(visited) == n

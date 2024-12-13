@@ -28,3 +28,37 @@ class Solution:
             result.append(heapq.heappop(min_heap)[1])
 
         return result
+
+    # quickselect since we want k closest points -> so sorted in ascending order
+
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        def distance(point):
+            return point[0] ** 2 + point[1] ** 2
+            
+        distances = [squared_distance(points[i]) for i in range(len(points))]
+        def quickselect(left, right):
+            pivot_idx = right
+            pivot = distances[pivot_idx]
+            start = left
+            if left > right:
+                return points[:left]
+            for idx in range(left, right):
+                if distances[idx] < pivot:
+                    distances[idx], distances[start] = distances[start], distances[idx]
+                    points[idx], points[start] = points[start], points[idx]
+                    start += 1
+
+            # swap the pivot with the right elem
+            distances[start], distances[pivot_idx] = distances[pivot_idx], distances[start]
+            points[start], points[pivot_idx] = points[pivot_idx], points[start]
+            if start < k:
+                # need more elems on lef
+                return quickselect(start + 1, right)
+
+            elif start == k:
+                # we have enough so return the points
+                return points[:k]
+            else:
+                return quickselect(left, start - 1)
+
+        return quickselect(0, len(points)-1)

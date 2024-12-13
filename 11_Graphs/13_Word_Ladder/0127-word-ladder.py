@@ -18,6 +18,43 @@ from collections import deque
 
 
 class Solution:
+    # bi directional bfs is faster!
+    def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
+        queue = collections.deque()
+        queue.append((beginWord, 1, True))  
+        queue.append((endWord, 1, False))
+
+        visited = dict()
+        # key = word, value = distance, direction of traversal
+        visited[beginWord] = [1, True] # isBegin
+        visited[endWord] = [1, False]
+
+        # create transforms of the word to word mapping
+        transforms = collections.defaultdict(list)
+        for word in wordList:
+            for idx in range(len(word)):
+                transform = word[0:idx] + "*" + word[idx+1:]
+                transforms[transform].append(word)
+
+        while queue:
+            curr_word, level, is_begin = queue.popleft()
+            # can get the level by instead checking visited[curr_word] hehe
+            
+            # check if transform of curr_word exists
+            for idx in range(len(curr_word)):
+                new_word = curr_word[:idx] + "*" + curr_word[idx+1:]
+
+                for word in transforms[new_word]:
+                    if word not in visited:
+                        visited[word] = [level+1, is_begin]
+                        queue.append((word, level+1, is_begin))
+
+                    else:
+                        if visited[word][1] != is_begin:
+                            return visited[word][0] + level
+        return 0
+
+
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         wordSet = set(wordList)
         if endWord not in wordSet:
